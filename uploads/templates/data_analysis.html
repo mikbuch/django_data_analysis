@@ -12,12 +12,14 @@
   {% if result_present %}
       <p><strong>Result:</strong>
         <ul>
-          <li>Preason's r = {{ results.r }}</li>
-          <li>probability <i>p</i> < {{ results.p }}</li>
+          <li>Preason's r<br>
+              {{ results.r_table|safe }}</li>
+          <li>probability <i>p</i> < x <br>
+              {{ results.p_table|safe }}</li>
         </ul>
       </p>
 
-      <p>Raw data, pandas' DataFrame rendered as html</p>
+      <p>Raw data, pandas' DataFrame rendered as HTML</p>
       <p>{{ df|safe }}</p>
 
   {% endif %}

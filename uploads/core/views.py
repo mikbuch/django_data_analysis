@@ -45,16 +45,27 @@ def data_analysis(request):
                 print(row)
 
         print('Data analysis')
-        r, p = stats.pearsonr(df['Diameter of Parent Seed (0.01 inch)'],
-                              df['Diameter of Daughter Seed (0.01 inch)'])
-        # Prevent p = 0.0
-        if p < 0.001:
-            p = 0.001
-        r, p = '%.03f' % r, '%.03f' % p
+        r_table = df.apply(lambda x: df.apply(lambda y: r_xor_p(x, y,
+                                                                r_xor_p='r')))
+        p_table = df.apply(lambda x: df.apply(lambda y: r_xor_p(x, y,
+                                                                r_xor_p='p')))
 
         return render(request, 'data_analysis.html',
                       {'result_present': True,
-                       'results': {'r': r, 'p': p},
+                       'results': {'r_table': r_table.to_html(),
+                                   'p_table': p_table.to_html()},
                        'df': df.to_html()})
 
     return render(request, 'data_analysis.html')
+
+
+def r_xor_p(x, y, r_xor_p='r'):
+    ''' Pearson's r or its p
+    Depending of what you would like to get.
+    '''
+    r, p = stats.pearsonr(x, y)
+
+    if r_xor_p == 'r':
+        return r
+    else:
+        return p
