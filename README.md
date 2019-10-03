@@ -5,7 +5,7 @@ Example strongly based on [How to Upload Files With Django](https://simpleisbett
 ## Running Locally
 
 ```bash
-git clone https://github.com/mikbuch/django_data_analysis
+git clone https://github.com/mikbuch/django_data_analysis.git
 ```
 
 ```bash
