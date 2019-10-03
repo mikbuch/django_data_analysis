@@ -1,36 +1,60 @@
-from django.shortcuts import render, redirect
-from django.conf import settings
+from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
+from scipy import stats
 
-from uploads.core.models import Document
-from uploads.core.forms import DocumentForm
+import csv
+import pandas as pd
 
 
 def home(request):
-    documents = Document.objects.all()
-    return render(request, 'core/home.html', { 'documents': documents })
+    print('Home')
+    return render(request, 'home.html')
 
 
-def simple_upload(request):
+def about(request):
+    print('About')
+    return render(request, 'about.html')
+
+
+def data_analysis(request):
+    print('Data analysis')
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
+
+        print('\nWhat is `myfile`?')
+        print(type(myfile))
+
+        print('\nDirectly accessing `myfile` gives nothing :(')
+        print(type(str(myfile.read())))
+        print(str(myfile.read()))
+
         fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        return render(request, 'core/simple_upload.html', {
-            'uploaded_file_url': uploaded_file_url
-        })
-    return render(request, 'core/simple_upload.html')
+        fs.save(myfile.name, myfile)
+        print('\nHowever, when using FileSystemStorage...')
+        print(type(fs.open(myfile)))
+        print(fs.open(myfile))
 
+        print('\nOpen and preview using pandas:')
+        df = pd.read_csv(fs.open(myfile))
+        print(df)
 
-def model_form_upload(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = DocumentForm()
-    return render(request, 'core/model_form_upload.html', {
-        'form': form
-    })
+        print('\nOr with CSV module:')
+        with fs.open(myfile) as csvfile:
+            readCSV = csv.reader(csvfile, delimiter=',')
+            for row in readCSV:
+                print(row)
+
+        print('Data analysis')
+        r, p = stats.pearsonr(df['Diameter of Parent Seed (0.01 inch)'],
+                              df['Diameter of Daughter Seed (0.01 inch)'])
+        # Prevent p = 0.0
+        if p < 0.001:
+            p = 0.001
+        r, p = '%.03f' % r, '%.03f' % p
+
+        return render(request, 'data_analysis.html',
+                      {'result_present': True,
+                       'results': {'r': r, 'p': p},
+                       'df': df.to_html()})
+
+    return render(request, 'data_analysis.html')

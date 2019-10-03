@@ -1,11 +1,15 @@
-# Simple File Upload Example
+# Upload file for data analysis
 
-Example used in the blog post [How to Upload Files With Django](https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html)
+Example strongly based on [How to Upload Files With Django](https://simpleisbetterthancomplex.com/tutorial/2016/08/01/how-to-upload-files-with-django.html)
 
 ## Running Locally
 
 ```bash
-git clone https://github.com/sibtc/simple-file-upload.git
+git clone https://github.com/mikbuch/django_data_analysis
+```
+
+```bash
+cd django_data_analysis
 ```
 
 ```bash

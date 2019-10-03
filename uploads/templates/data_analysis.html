@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload and analyze</button>
+  </form>
+
+  {% if result_present %}
+      <p><strong>Result:</strong>
+        <ul>
+          <li>Preason's r = {{ results.r }}</li>
+          <li>probability <i>p</i> < {{ results.p }}</li>
+        </ul>
+      </p>
+
+      <p>Raw data, pandas' DataFrame rendered as html</p>
+      <p>{{ df|safe }}</p>
+
+  {% endif %}
+
+{% endblock %}
