@@ -29,17 +29,18 @@ def data_analysis(request):
         print(str(myfile.read()))
 
         fs = FileSystemStorage()
-        fs.save(myfile.name, myfile)
+        filename = fs.save(myfile.name, myfile)
         print('\nHowever, when using FileSystemStorage...')
-        print(type(fs.open(myfile)))
-        print(fs.open(myfile))
+        print('\nReading filename: %s' % filename)
+        print(type(fs.open(filename)))
+        print(fs.open(filename))
 
         print('\nOpen and preview using pandas:')
-        df = pd.read_csv(fs.open(myfile))
+        df = pd.read_csv(fs.open(filename))
         print(df)
 
         print('\nOr with CSV module:')
-        with fs.open(myfile, 'rt') as csvfile:
+        with fs.open(filename, 'rt') as csvfile:
             readCSV = csv.reader(csvfile, delimiter=',')
             for row in readCSV:
                 print(row)
